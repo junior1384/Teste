@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Principal -->
+    <title>
+      Calculadora de Juros Compostos - Simulador de Investimentos Online
+    </title>
+    <meta
+      name="description"
+      content="Simule o rendimento dos seus investimentos mês a mês com nossa calculadora de juros compostos online e gratuita. Descubra quanto seu dinheiro pode render."
+    />
+    <meta
+      name="google-site-verification"
+      content="mn4co5FkKXLyVDA94sR_D52jPP1IJqaB42dFCnLvk_o"
+    />
+
+    <!-- PASSO 1: Tag Canonical (Substitua https://seusite.com pela sua URL real) -->
+    <link rel="canonical" href="https://seusite.com/" />
+
+    <!-- PASSO 1: Schema.org (Dados Estruturados para o Google entender a aplicação) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Calculadora de Juros Compostos",
+        "url": "https://seusite.com/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "BRL"
+        }
+      }
+    </script>
+
+    <!-- Biblioteca QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+      }
+      body {
+        background-color: #f8fafc;
+        color: #1e293b;
+        padding: 1.5rem;
+        line-height: 1.5;
+      }
+      .container {
+        max-width: 650px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #0f172a;
+        text-align: center;
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        color: #475569;
+      }
+      input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      button {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 0.5rem;
+      }
+      button:hover {
+        background-color: #1d4ed8;
+      }
+      .result {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background-color: #f1f5f9;
+        border-radius: 6px;
+        display: none;
+      }
+      .result p {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Pix Box */
+      .pix-box {
+        margin-top: 2rem;
+        padding: 1.25rem;
+        background-color: #eff6ff;
+        border-radius: 6px;
+        border: 1px solid #bfdbfe;
+        text-align: center;
+      }
+
+      /* PASSO 2: SEO On-Page expandido */
+      .seo-content {
+        margin-top: 2.5rem;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 1.5rem;
+      }
+      .seo-content h2 {
+        font-size: 1.125rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #0f172a;
+      }
+      .seo-content p,
+      .seo-content li {
+        font-size: 0.9rem;
+        color: #475569;
+        margin-bottom: 0.75rem;
+      }
+      .seo-content ul {
+        margin-left: 1.25rem;
+      }
+      .formula-box {
+        background: #f1f5f9;
+        padding: 0.75rem;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #1e293b;
+        margin: 1rem 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.875rem;
+      }
+      th,
+      td {
+        border: 1px solid #cbd5e1;
+        padding: 0.5rem;
+        text-align: left;
+      }
+      th {
+        background-color: #f1f5f9;
+        color: #0f172a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Calculadora de Juros Compostos</h1>
+
+      <!-- Formulário -->
+      <div class="form-group">
+        <label for="initial">Valor Inicial (R$):</label>
+        <input type="number" id="initial" placeholder="Ex: 1000" value="1000" />
+      </div>
+
+      <div class="form-group">
+        <label for="monthly">Aporte Mensal (R$):</label>
+        <input type="number" id="monthly" placeholder="Ex: 200" value="200" />
+      </div>
+
+      <div class="form-group">
+        <label for="rate">Taxa de Juros Mensal (%):</label>
+        <input
+          type="number"
+          id="rate"
+          step="0.1"
+          placeholder="Ex: 1"
+          value="1"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="period">Período (em meses):</label>
+        <input type="number" id="period" placeholder="Ex: 12" value="12" />
+      </div>
+
+      <button onclick="calculate()">Calcular Rendimento</button>
+
+      <!-- Resultados -->
+      <div id="result" class="result">
+        <p>
+          <strong>Valor Total Investido:</strong> R$
+          <span id="total-invested">0,00</span>
+        </p>
+        <p>
+          <strong>Total em Juros:</strong> R$
+          <span id="total-interest">0,00</span>
+        </p>
+        <p>
+          <strong>Montante Final:</strong> R$
+          <span id="final-amount">0,00</span>
+        </p>
+      </div>
+
+      <!-- Monetização via Pix -->
+      <div class="pix-box">
+        <p style="font-size: 0.875rem; color: #1e40af; margin-bottom: 0.5rem">
+          Gostou da ferramenta? Apoie este projeto!
+        </p>
+        <canvas
+          id="canvas-qrcode"
+          style="
+            margin: 0.5rem auto;
+            display: block;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+          "
+        ></canvas>
+        <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.5rem">
+          Escaneie o código ou copie a chave abaixo:
+        </p>
+        <div
+          style="
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            align-items: center;
+            max-width: 400px;
+            margin: 0 auto;
+          "
+        >
+          <input
+            type="text"
+            id="pixKey"
+            readonly
+            style="
+              font-size: 0.875rem;
+              padding: 0.5rem;
+              background: #ffffff;
+              text-align: center;
+              border: 1px solid #cbd5e1;
+              border-radius: 6px;
+            "
+          />
+          <button
+            onclick="copyPix()"
+            id="btnCopy"
+            style="
+              width: auto;
+              margin-top: 0;
+              padding: 0.5rem 1rem;
+              font-size: 0.875rem;
+              white-space: nowrap;
+            "
+          >
+            Copiar Chave
+          </button>
+        </div>
+      </div>
+
+      <!-- PASSO 2: Conteúdo de Texto Estruturado para SEO -->
+      <div class="seo-content">
+        <h2>Como funciona a Calculadora de Juros Compostos?</h2>
+        <p>
+          Esta ferramenta realiza o cálculo do rendimento acumulado sobre um
+          capital inicial aplicado mais os aportes mensais no período
+          selecionado. Ela considera o efeito multiplicador dos juros sobre
+          juros.
+        </p>
+
+        <h2>Qual é a Fórmula dos Juros Compostos?</h2>
+        <p>
+          A fórmula matemática utilizada para realizar o cálculo sem aportes
+          intermediários é:
+        </p>
+        <div class="formula-box">M = C × (1 + i)ᵗ</div>
+        <ul>
+          <li><strong>M:</strong> Montante final acumulado</li>
+          <li><strong>C:</strong> Capital inicial investido</li>
+          <li><strong>i:</strong> Taxa de juros (em decimal)</li>
+          <li><strong>t:</strong> Tempo/Período de rendimento</li>
+        </ul>
+
+        <h2>Exemplo Prático de Simulação (Taxa de 1% ao mês)</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Aplicação Inicial</th>
+              <th>Aporte Mensal</th>
+              <th>Tempo</th>
+              <th>Montante Final Est.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>R$ 1.000</td>
+              <td>R$ 100</td>
+              <td>1 ano (12 m)</td>
+              <td>R$ 2.408,56</td>
+            </tr>
+            <tr>
+              <td>R$ 1.000</td>
+              <td>R$ 200</td>
+              <td>2 anos (24 m)</td>
+              <td>R$ 6.643,88</td>
+            </tr>
+            <tr>
+              <td>R$ 5.000</td>
+              <td>R$ 500</td>
+              <td>5 anos (60 m)</td>
+              <td>R$ 50.088,10</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Perguntas Frequentes (FAQ)</h2>
+        <h3>Qual a diferença entre Juros Simples e Compostos?</h3>
+        <p>
+          Nos juros simples, o rendimento é calculado apenas sobre o valor
+          inicial investido. Já nos juros compostos, o rendimento do mês é
+          somado ao saldo total, fazendo com que os juros do mês seguinte rendam
+          sobre o valor já multiplicado.
+        </p>
+
+        <h3>Como aplicar na prática?</h3>
+        <p>
+          Esses cálculos são utilizados para simular investimentos em Renda Fixa
+          (CDB, Tesouro Direto, LCI/LCA) e carteiras de acúmulo de patrimônio no
+          longo prazo.
+        </p>
+      </div>
+    </div>
+
+    <!-- JavaScript NATIVO -->
+    <script>
+      const CHAVE_PIX = "d1a4fafe-186f-4d6b-96ed-9de445b8ab81";
+      const NOME_RECEBEDOR = "JUNIOR";
+      const CIDADE = "SAO PAULO";
+
+      function crc16(payload) {
+        let crc = 0xffff;
+        for (let i = 0; i < payload.length; i++) {
+          crc ^= payload.charCodeAt(i) << 8;
+          for (let j = 0; j < 8; j++) {
+            if ((crc & 0x8000) !== 0) {
+              crc = (crc << 1) ^ 0x1021;
+            } else {
+              crc = crc << 1;
+            }
+            crc &= 0xffff;
+          }
+        }
+        return crc.toString(16).toUpperCase().padStart(4, "0");
+      }
+
+      function gerarPayloadPix(chave, nome, cidade) {
+        const format = (id, value) =>
+          id + String(value.length).padStart(2, "0") + value;
+        const merchantAccount =
+          format("00", "br.gov.bcb.pix") + format("01", chave);
+
+        let payload =
+          format("00", "01") +
+          format("26", merchantAccount) +
+          format("52", "0000") +
+          format("53", "986") +
+          format("58", "BR") +
+          format("59", nome.substring(0, 25)) +
+          format("60", cidade.substring(0, 15)) +
+          format("62", format("05", "***")) +
+          "6304";
+
+        return payload + crc16(payload);
+      }
+
+      const payloadPix = gerarPayloadPix(CHAVE_PIX, NOME_RECEBEDOR, CIDADE);
+      document.getElementById("pixKey").value = payloadPix;
+
+      QRCode.toCanvas(
+        document.getElementById("canvas-qrcode"),
+        payloadPix,
+        { width: 150 },
+        function (error) {
+          if (error) console.error("Erro ao gerar QR Code:", error);
+        },
+      );
+
+      function copyPix() {
+        const pixInput = document.getElementById("pixKey");
+        pixInput.select();
+        pixInput.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(pixInput.value).then(() => {
+          const btn = document.getElementById("btnCopy");
+          btn.innerText = "Copiado!";
+          btn.style.backgroundColor = "#16a34a";
+          setTimeout(() => {
+            btn.innerText = "Copiar Chave";
+            btn.style.backgroundColor = "#2563eb";
+          }, 2000);
+        });
+      }
+
+      function calculate() {
+        const initial =
+          parseFloat(document.getElementById("initial").value) || 0;
+        const monthly =
+          parseFloat(document.getElementById("monthly").value) || 0;
+        const rate =
+          (parseFloat(document.getElementById("rate").value) || 0) / 100;
+        const period = parseInt(document.getElementById("period").value) || 0;
+
+        let total = initial;
+        let totalInvested = initial;
+
+        for (let i = 0; i < period; i++) {
+          total = total * (1 + rate) + monthly;
+          totalInvested += monthly;
+        }
+
+        const totalInterest = total - totalInvested;
+
+        document.getElementById("total-invested").innerText =
+          totalInvested.toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+        document.getElementById("total-interest").innerText =
+          totalInterest.toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+        document.getElementById("final-amount").innerText =
+          total.toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+
+        document.getElementById("result").style.display = "block";
+      }
+    </script>
+  </body>
+</html>
