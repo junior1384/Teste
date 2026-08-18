@@ -3,457 +3,336 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- SEO Principal -->
-    <title>
-      Calculadora de Juros Compostos - Simulador de Investimentos Online
-    </title>
-    <meta
-      name="description"
-      content="Simule o rendimento dos seus investimentos mês a mês com nossa calculadora de juros compostos online e gratuita. Descubra quanto seu dinheiro pode render."
-    />
-    <meta
-      name="google-site-verification"
-      content="mn4co5FkKXLyVDA94sR_D52jPP1IJqaB42dFCnLvk_o"
-    />
-
-    <!-- PASSO 1: Tag Canonical (Substitua https://seusite.com pela sua URL real) -->
-    <link rel="canonical" href="https://calculator-five-flax-87.vercel.app/" />
-    <!-- PASSO 1: Schema.org (Dados Estruturados para o Google entender a aplicação) -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Calculadora de Juros Compostos",
-        "url": "https://calculator-five-flax-87.vercel.app/",
-        "applicationCategory": "FinanceApplication",
-        "operatingSystem": "All",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "BRL"
-        }
-      }
-    </script>
-
-    <!-- Biblioteca QR Code -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-
+    <title>Gerador de Recibos Profissional</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue.js 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- Gerador de QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <!-- Gerador de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-          Arial, sans-serif;
-      }
-      body {
-        background-color: #f8fafc;
-        color: #1e293b;
-        padding: 1.5rem;
-        line-height: 1.5;
-      }
-      .container {
-        max-width: 650px;
-        margin: 0 auto;
-        background: #ffffff;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-      }
-      h1 {
-        font-size: 1.5rem;
-        margin-bottom: 1rem;
-        color: #0f172a;
-        text-align: center;
-      }
-      .form-group {
-        margin-bottom: 1rem;
-      }
-      label {
-        display: block;
-        font-size: 0.875rem;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-        color: #475569;
-      }
-      input {
-        width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        font-size: 1rem;
-      }
-      button {
-        width: 100%;
-        padding: 0.75rem;
-        background-color: #2563eb;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: 0.5rem;
-      }
-      button:hover {
-        background-color: #1d4ed8;
-      }
-      .result {
-        margin-top: 1.5rem;
-        padding: 1rem;
-        background-color: #f1f5f9;
-        border-radius: 6px;
-        display: none;
-      }
-      .result p {
-        margin-bottom: 0.5rem;
-      }
+      @media print {
+        body * {
+          visibility: hidden;
+        }
 
-      /* Pix Box */
-      .pix-box {
-        margin-top: 2rem;
-        padding: 1.25rem;
-        background-color: #eff6ff;
-        border-radius: 6px;
-        border: 1px solid #bfdbfe;
-        text-align: center;
-      }
+        #recibo-preview,
+        #recibo-preview * {
+          visibility: visible;
+        }
 
-      /* PASSO 2: SEO On-Page expandido */
-      .seo-content {
-        margin-top: 2.5rem;
-        border-top: 1px solid #e2e8f0;
-        padding-top: 1.5rem;
-      }
-      .seo-content h2 {
-        font-size: 1.125rem;
-        margin-top: 1.5rem;
-        margin-bottom: 0.5rem;
-        color: #0f172a;
-      }
-      .seo-content p,
-      .seo-content li {
-        font-size: 0.9rem;
-        color: #475569;
-        margin-bottom: 0.75rem;
-      }
-      .seo-content ul {
-        margin-left: 1.25rem;
-      }
-      .formula-box {
-        background: #f1f5f9;
-        padding: 0.75rem;
-        border-radius: 6px;
-        text-align: center;
-        font-weight: bold;
-        font-size: 1.1rem;
-        color: #1e293b;
-        margin: 1rem 0;
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 1rem 0;
-        font-size: 0.875rem;
-      }
-      th,
-      td {
-        border: 1px solid #cbd5e1;
-        padding: 0.5rem;
-        text-align: left;
-      }
-      th {
-        background-color: #f1f5f9;
-        color: #0f172a;
+        #recibo-preview {
+          position: fixed;
+          inset: 0;
+          width: 100%;
+          min-height: 100%;
+          margin: 0;
+          padding: 2.5cm;
+          border: 0;
+          border-radius: 0;
+          box-shadow: none;
+        }
       }
     </style>
   </head>
-  <body>
-    <div class="container">
-      <h1>Calculadora de Juros Compostos</h1>
+  <body class="bg-slate-900 text-slate-100 min-h-screen py-6 sm:py-10 px-4">
+    <div
+      id="app"
+      class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-6 md:gap-8 items-start"
+    >
+      <!-- PAINEL DE CONTROLE (EDITAR DADOS) -->
+      <section
+        class="bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-700 shadow-xl space-y-4 md:sticky md:top-6"
+      >
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-blue-400">Preencha os dados</p>
+        <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+          <svg
+            class="w-6 h-6 text-blue-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            ></path>
+          </svg>
+          Gerador de Recibos
+        </h1>
 
-      <!-- Formulário -->
-      <div class="form-group">
-        <label for="initial">Valor Inicial (R$):</label>
-        <input type="number" id="initial" placeholder="Ex: 1000" value="1000" />
-      </div>
-
-      <div class="form-group">
-        <label for="monthly">Aporte Mensal (R$):</label>
-        <input type="number" id="monthly" placeholder="Ex: 200" value="200" />
-      </div>
-
-      <div class="form-group">
-        <label for="rate">Taxa de Juros Mensal (%):</label>
-        <input
-          type="number"
-          id="rate"
-          step="0.1"
-          placeholder="Ex: 1"
-          value="1"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="period">Período (em meses):</label>
-        <input type="number" id="period" placeholder="Ex: 12" value="12" />
-      </div>
-
-      <button onclick="calculate()">Calcular Rendimento</button>
-
-      <!-- Resultados -->
-      <div id="result" class="result">
-        <p>
-          <strong>Valor Total Investido:</strong> R$
-          <span id="total-invested">0,00</span>
-        </p>
-        <p>
-          <strong>Total em Juros:</strong> R$
-          <span id="total-interest">0,00</span>
-        </p>
-        <p>
-          <strong>Montante Final:</strong> R$
-          <span id="final-amount">0,00</span>
-        </p>
-      </div>
-
-      <!-- Monetização via Pix -->
-      <div class="pix-box">
-        <p style="font-size: 0.875rem; color: #1e40af; margin-bottom: 0.5rem">
-          Gostou da ferramenta? Apoie este projeto!
-        </p>
-        <canvas
-          id="canvas-qrcode"
-          style="
-            margin: 0.5rem auto;
-            display: block;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-          "
-        ></canvas>
-        <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.5rem">
-          Escaneie o código ou copie a chave abaixo:
-        </p>
-        <div
-          style="
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            align-items: center;
-            max-width: 400px;
-            margin: 0 auto;
-          "
-        >
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1"
+            >Valor (R$)</label
+          >
           <input
             type="text"
-            id="pixKey"
-            readonly
-            style="
-              font-size: 0.875rem;
-              padding: 0.5rem;
-              background: #ffffff;
-              text-align: center;
-              border: 1px solid #cbd5e1;
-              border-radius: 6px;
-            "
+            v-model="form.valor"
+            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500"
           />
-          <button
-            onclick="copyPix()"
-            id="btnCopy"
-            style="
-              width: auto;
-              margin-top: 0;
-              padding: 0.5rem 1rem;
-              font-size: 0.875rem;
-              white-space: nowrap;
-            "
-          >
-            Copiar Chave
-          </button>
         </div>
-      </div>
 
-      <!-- PASSO 2: Conteúdo de Texto Estruturado para SEO -->
-      <div class="seo-content">
-        <h2>Como funciona a Calculadora de Juros Compostos?</h2>
-        <p>
-          Esta ferramenta realiza o cálculo do rendimento acumulado sobre um
-          capital inicial aplicado mais os aportes mensais no período
-          selecionado. Ela considera o efeito multiplicador dos juros sobre
-          juros.
-        </p>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1"
+            >Recebi de (Pagador)</label
+          >
+          <input
+            type="text"
+            v-model="form.pagador"
+            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500"
+          />
+        </div>
 
-        <h2>Qual é a Fórmula dos Juros Compostos?</h2>
-        <p>
-          A fórmula matemática utilizada para realizar o cálculo sem aportes
-          intermediários é:
-        </p>
-        <div class="formula-box">M = C × (1 + i)ᵗ</div>
-        <ul>
-          <li><strong>M:</strong> Montante final acumulado</li>
-          <li><strong>C:</strong> Capital inicial investido</li>
-          <li><strong>i:</strong> Taxa de juros (em decimal)</li>
-          <li><strong>t:</strong> Tempo/Período de rendimento</li>
-        </ul>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1"
+            >Referente a</label
+          >
+          <textarea
+            v-model="form.descricao"
+            rows="3"
+            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500"
+          ></textarea>
+        </div>
 
-        <h2>Exemplo Prático de Simulação (Taxa de 1% ao mês)</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Aplicação Inicial</th>
-              <th>Aporte Mensal</th>
-              <th>Tempo</th>
-              <th>Montante Final Est.</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>R$ 1.000</td>
-              <td>R$ 100</td>
-              <td>1 ano (12 m)</td>
-              <td>R$ 2.408,56</td>
-            </tr>
-            <tr>
-              <td>R$ 1.000</td>
-              <td>R$ 200</td>
-              <td>2 anos (24 m)</td>
-              <td>R$ 6.643,88</td>
-            </tr>
-            <tr>
-              <td>R$ 5.000</td>
-              <td>R$ 500</td>
-              <td>5 anos (60 m)</td>
-              <td>R$ 50.088,10</td>
-            </tr>
-          </tbody>
-        </table>
+        <div>
+          <label class="block text-sm font-medium text-slate-300 mb-1"
+            >Data</label
+          >
+          <input
+            type="text"
+            v-model="form.data"
+            class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-blue-500"
+          />
+        </div>
 
-        <h2>Perguntas Frequentes (FAQ)</h2>
-        <h3>Qual a diferença entre Juros Simples e Compostos?</h3>
-        <p>
-          Nos juros simples, o rendimento é calculado apenas sobre o valor
-          inicial investido. Já nos juros compostos, o rendimento do mês é
-          somado ao saldo total, fazendo com que os juros do mês seguinte rendam
-          sobre o valor já multiplicado.
-        </p>
+        <button
+          @click="openPixModal"
+          class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-lg transition shadow-lg shadow-blue-600/20 cursor-pointer"
+        >
+          Liberar e Baixar Recibo (R$ 5,00)
+        </button>
+      </section>
 
-        <h3>Como aplicar na prática?</h3>
-        <p>
-          Esses cálculos são utilizados para simular investimentos em Renda Fixa
-          (CDB, Tesouro Direto, LCI/LCA) e carteiras de acúmulo de patrimônio no
-          longo prazo.
-        </p>
+      <!-- PREVIEW EM TEMPO REAL -->
+      <section class="space-y-3">
+        <div class="flex items-center justify-between px-1">
+          <h2 class="text-sm font-semibold text-slate-200">Prévia do comprovante</h2>
+          <span class="text-xs text-slate-400">Atualizada em tempo real</span>
+        </div>
+        <div
+          id="recibo-preview"
+          class="w-full bg-white text-slate-900 p-6 sm:p-8 rounded-2xl shadow-2xl border border-slate-200 flex flex-col justify-between min-h-[480px] md:min-h-[540px]"
+        >
+          <div>
+            <div class="flex justify-between items-center border-b pb-4 mb-6">
+              <span
+                class="text-xs tracking-widest uppercase font-bold text-slate-400"
+                >Comprovante Oficial</span
+              >
+              <span class="text-xl font-black text-blue-600">RECIBO</span>
+            </div>
+
+            <div class="my-6">
+              <p class="text-xs uppercase tracking-wider text-slate-500">
+                Valor da Quantia
+              </p>
+              <p class="text-3xl font-extrabold text-slate-900">
+                R$ {{ form.valor }}
+              </p>
+            </div>
+
+            <div class="space-y-4 text-sm text-slate-700">
+              <p>
+                <strong class="text-slate-900">Recebi de:</strong> {{
+                form.pagador }}
+              </p>
+              <p>
+                <strong class="text-slate-900">A quantia supra de:</strong> R$
+                {{ form.valor }}
+              </p>
+              <p>
+                <strong class="text-slate-900">Referente a:</strong> {{
+                form.descricao }}
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="mt-8 pt-4 border-t border-slate-200 text-xs text-slate-500"
+          >
+            <span>{{ form.data }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODAL DE PIX -->
+      <div
+        v-if="showPixModal"
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+      >
+        <div
+          class="bg-slate-800 border border-slate-700 max-w-md w-full p-6 rounded-2xl shadow-2xl text-center space-y-4"
+        >
+          <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-500/15 text-green-400">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </div>
+          <div class="space-y-2">
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-green-400">Seu recibo está pronto</p>
+            <h3 class="text-xl font-bold text-white">Finalize com uma contribuição de R$ 5,00</h3>
+          </div>
+          <p class="text-sm leading-6 text-slate-300">
+            Sua contribuição ajuda a manter este gerador simples e acessível.
+            Após o Pix, escolha como receber seu recibo: em PDF ou diretamente na impressora.
+          </p>
+
+          <div class="bg-white rounded-xl p-4 mx-auto w-fit shadow-lg shadow-green-500/10">
+            <div ref="pixQrCode" aria-label="QR Code para pagamento via Pix"></div>
+          </div>
+          <p class="text-xs text-slate-400">Escaneie o QR Code ou copie a chave Pix abaixo.</p>
+
+          <div
+            class="bg-slate-900 p-3 rounded-lg border border-slate-700 text-xs font-mono text-blue-400 break-all"
+          >
+            {{ pixKey }}
+          </div>
+
+          <p class="text-xs text-slate-500">Pagamento via Pix • Após pagar, escolha uma das opções abaixo</p>
+
+          <div class="flex gap-3 pt-2">
+            <button
+              @click="showPixModal = false"
+              class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-medium py-2.5 rounded-lg transition cursor-pointer"
+            >
+              Cancelar
+            </button>
+            <button
+              @click="printReceipt"
+              class="flex-1 bg-slate-600 hover:bg-slate-500 text-white font-medium py-2.5 rounded-lg transition cursor-pointer"
+            >
+              Imprimir
+            </button>
+            <button
+              @click="downloadPDF"
+              class="flex-1 bg-green-600 hover:bg-green-500 text-white font-semibold py-2.5 rounded-lg transition shadow-lg shadow-green-600/25 cursor-pointer"
+            >
+              Baixar PDF
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- JavaScript NATIVO -->
     <script>
-      const CHAVE_PIX = "d1a4fafe-186f-4d6b-96ed-9de445b8ab81";
-      const NOME_RECEBEDOR = "JUNIOR";
-      const CIDADE = "SAO PAULO";
+      const { createApp, ref, nextTick } = Vue;
 
-      function crc16(payload) {
-        let crc = 0xffff;
-        for (let i = 0; i < payload.length; i++) {
-          crc ^= payload.charCodeAt(i) << 8;
-          for (let j = 0; j < 8; j++) {
-            if ((crc & 0x8000) !== 0) {
-              crc = (crc << 1) ^ 0x1021;
-            } else {
-              crc = crc << 1;
+      createApp({
+        setup() {
+          const showPixModal = ref(false);
+          const pixKey = "d1a4fafe-186f-4d6b-96ed-9de445b8ab81";
+          const pixQrCode = ref(null);
+
+          const crc16 = (payload) => {
+            let crc = 0xffff;
+            for (let i = 0; i < payload.length; i++) {
+              crc ^= payload.charCodeAt(i) << 8;
+              for (let j = 0; j < 8; j++) {
+                crc = (crc & 0x8000) !== 0 ? (crc << 1) ^ 0x1021 : crc << 1;
+                crc &= 0xffff;
+              }
             }
-            crc &= 0xffff;
-          }
-        }
-        return crc.toString(16).toUpperCase().padStart(4, "0");
-      }
+            return crc.toString(16).toUpperCase().padStart(4, "0");
+          };
 
-      function gerarPayloadPix(chave, nome, cidade) {
-        const format = (id, value) =>
-          id + String(value.length).padStart(2, "0") + value;
-        const merchantAccount =
-          format("00", "br.gov.bcb.pix") + format("01", chave);
+          const gerarPayloadPix = (chave, nome, cidade) => {
+            const campo = (id, valor) =>
+              id + String(valor.length).padStart(2, "0") + valor;
+            const contaPix =
+              campo("00", "br.gov.bcb.pix") + campo("01", chave);
+            const payload =
+              campo("00", "01") +
+              campo("26", contaPix) +
+              campo("52", "0000") +
+              campo("53", "986") +
+              campo("58", "BR") +
+              campo("59", nome.substring(0, 25)) +
+              campo("60", cidade.substring(0, 15)) +
+              campo("62", campo("05", "***")) +
+              "6304";
+            return payload + crc16(payload);
+          };
 
-        let payload =
-          format("00", "01") +
-          format("26", merchantAccount) +
-          format("52", "0000") +
-          format("53", "986") +
-          format("58", "BR") +
-          format("59", nome.substring(0, 25)) +
-          format("60", cidade.substring(0, 15)) +
-          format("62", format("05", "***")) +
-          "6304";
+          const pixPayload = gerarPayloadPix(pixKey, "JUNIOR", "SAO PAULO");
+          const form = ref({
+            valor: "500,00",
+            pagador: "João da Silva",
+            descricao:
+              "Serviços de desenvolvimento web prestados no mês vigente.",
+            data: "18 de agosto de 2026",
+          });
 
-        return payload + crc16(payload);
-      }
+          const openPixModal = async () => {
+            showPixModal.value = true;
+            await nextTick();
 
-      const payloadPix = gerarPayloadPix(CHAVE_PIX, NOME_RECEBEDOR, CIDADE);
-      document.getElementById("pixKey").value = payloadPix;
+            if (pixQrCode.value && !pixQrCode.value.hasChildNodes()) {
+              new QRCode(pixQrCode.value, {
+                text: pixPayload,
+                width: 180,
+                height: 180,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.M,
+              });
+            }
+          };
 
-      QRCode.toCanvas(
-        document.getElementById("canvas-qrcode"),
-        payloadPix,
-        { width: 150 },
-        function (error) {
-          if (error) console.error("Erro ao gerar QR Code:", error);
+          const getFileName = () => {
+            const pagador = form.value.pagador
+              .trim()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .replace(/[^a-zA-Z0-9]+/g, "-")
+              .replace(/^-|-$/g, "")
+              .toLowerCase();
+            return `recibo-${pagador || "sem-nome"}.pdf`;
+          };
+
+          const downloadPDF = () => {
+            showPixModal.value = false;
+            const recibo = document.getElementById("recibo-preview");
+            html2pdf()
+              .set({
+                margin: 10,
+                filename: getFileName(),
+                image: { type: "jpeg", quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+              })
+              .from(recibo)
+              .save();
+          };
+
+          const printReceipt = () => {
+            showPixModal.value = false;
+            setTimeout(() => window.print(), 100);
+          };
+
+          return {
+            form,
+            showPixModal,
+            pixKey,
+            pixQrCode,
+            openPixModal,
+            downloadPDF,
+            printReceipt,
+          };
         },
-      );
-
-      function copyPix() {
-        const pixInput = document.getElementById("pixKey");
-        pixInput.select();
-        pixInput.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(pixInput.value).then(() => {
-          const btn = document.getElementById("btnCopy");
-          btn.innerText = "Copiado!";
-          btn.style.backgroundColor = "#16a34a";
-          setTimeout(() => {
-            btn.innerText = "Copiar Chave";
-            btn.style.backgroundColor = "#2563eb";
-          }, 2000);
-        });
-      }
-
-      function calculate() {
-        const initial =
-          parseFloat(document.getElementById("initial").value) || 0;
-        const monthly =
-          parseFloat(document.getElementById("monthly").value) || 0;
-        const rate =
-          (parseFloat(document.getElementById("rate").value) || 0) / 100;
-        const period = parseInt(document.getElementById("period").value) || 0;
-
-        let total = initial;
-        let totalInvested = initial;
-
-        for (let i = 0; i < period; i++) {
-          total = total * (1 + rate) + monthly;
-          totalInvested += monthly;
-        }
-
-        const totalInterest = total - totalInvested;
-
-        document.getElementById("total-invested").innerText =
-          totalInvested.toLocaleString("pt-BR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          });
-        document.getElementById("total-interest").innerText =
-          totalInterest.toLocaleString("pt-BR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          });
-        document.getElementById("final-amount").innerText =
-          total.toLocaleString("pt-BR", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          });
-
-        document.getElementById("result").style.display = "block";
-      }
+      }).mount("#app");
     </script>
   </body>
 </html>
